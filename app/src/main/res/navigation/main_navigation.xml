@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainNavigationFragment"
+    app:startDestination="@id/countriesDataFragment">
+
+    <fragment
+        android:id="@+id/countriesDataFragment"
+        android:name="com.example.matrixassignment.countriesdatascreen.view.CountriesDataFragment"
+        tools:layout="@layout/fragment_countries_data">
+
+        <action
+            android:id="@+id/navigate_to_welcome"
+            app:destination="@id/welcomeFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.matrixassignment.countrybordersscreen.view.CountryBordersFragment"
+        tools:layout="@layout/fragment_country_border">
+
+        <argument
+            android:name="@string/token"
+            android:defaultValue=""
+            app:argType="string" />
+
+    </fragment>
+
+
+
+</navigation>
