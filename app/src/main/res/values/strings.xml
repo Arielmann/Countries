@@ -1,18 +1,16 @@
 <resources>
-    <string name="app_name">InterviewProjectSDK</string>
+    <string name="app_name">Countries</string>
 
     <!--Readable text-->
     <string name="cancelled">Cancelled</string>
-    <string name="scan_a_barcode">Scan a barcode</string>
+
     <string name="error_null_event">A null error event was sent</string>
     <string name="error_unknown_failure">An unknown error has occurred</string>
-    <string name="error_qr_scan_failed">The QR barcode scan process failed</string>
-    <string name="error_audio_data_fetch_failed">Error: could not download audio files data list</string>
-    <string name="event_message_scan_cancelled">Scan cancelled</string>
-    <string name="error_cannot_play_audio">Cannot play audio file, please restart the app and try again</string>
+    <string name="error_audio_data_fetch_failed">Error: could not download countries data list</string>
+    <string name="error_cannot_access_borders">Error: cannot access borders for this country</string>
 
-    <string name="token">token</string>
     <string name="title_world_countries">World countries</string>
-    <string name="title_bounding_countries">Bounding countries</string>
-    <string name="key_chosen_country">chosen_country</string>
+    <string name="title_bordering_countries">Bordering countries</string>
+    <string name="title_no_bordering_countries">No bordering countries</string>
+    <string name="key_bordering_countries">key_bordering_countries</string>
 </resources>

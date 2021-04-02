@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grayFade"
-    tools:context="com.example.matrixassignment.countriesdatascreen.view.SDKMainActivity">
+    android:background="@color/grayFade">
 
     <TextView
-        android:id="@+id/titleTV"
+        android:id="@+id/countriesListTitleTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -22,17 +21,17 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/audioDataRV"
+        android:id="@+id/countriesListRV"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="@dimen/recycler_view_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTV" />
+        app:layout_constraintTop_toBottomOf="@+id/countriesListTitleTV" />
 
     <ImageView
-        android:id="@+id/restartProcessIV"
+        android:id="@+id/countriesListRestartProcessIV"
         android:layout_width="250dp"
         android:layout_height="250dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -45,12 +44,12 @@
         tools:ignore="HardcodedText" />
 
     <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/countriesListProgressBar"
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:indeterminate="true"
-        android:indeterminateTint="@android:color/holo_red_dark"
+        android:indeterminateTint="@color/design_default_color_primary"
         android:max="100"
         android:minWidth="200dp"
         android:minHeight="50dp"
@@ -61,7 +60,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/errorTV"
+        android:id="@+id/countriesListErrorTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -72,6 +71,6 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/restartProcessIV" />
+        app:layout_constraintTop_toBottomOf="@+id/countriesListRestartProcessIV" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

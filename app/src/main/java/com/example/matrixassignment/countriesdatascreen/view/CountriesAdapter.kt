@@ -18,7 +18,7 @@ class CountriesAdapter : ListAdapter<Country, CountriesAdapter.AudioDataViewHold
         val TAG: String = CountriesAdapter::class.simpleName!!
     }
 
-    lateinit var onItemClickListener: (country: Country) -> Unit
+    var onItemClickListener: ((country: Country) -> Unit)? = null
 
     /**
      * A view holder for managing the screen display of a single [Country]
@@ -29,12 +29,10 @@ class CountriesAdapter : ListAdapter<Country, CountriesAdapter.AudioDataViewHold
             binding.countryViewHolderNameTV.text = country.name
             binding.countryViewHolderNativeNameTV.text = country.nativeName
             binding.root.setOnClickListener {
-                onItemClickListener.invoke(country)
+                onItemClickListener?.invoke(country)
             }
         }
     }
-
-    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AudioDataViewHolder {
         val binding = VhCountryBinding.inflate(LayoutInflater.from(MatrixAssignmentApp.context), parent, false)

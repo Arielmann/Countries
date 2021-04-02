@@ -1,6 +1,5 @@
 package com.example.matrixassignment.countriesdatascreen.viewmodel
 
-import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,8 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * A viewModel Responsible for parsing the barcode scan results
- * and managing the [Country] obtained throughout the downloading process
+ * A viewModel responsible for accessing and managing data regarding to countries
  */
 @HiltViewModel
 class CountriesDataViewModel @Inject constructor(private val countriesRepository: CountriesRepository) :
@@ -26,19 +24,22 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
         private val TAG: String? = CountriesDataViewModel::class.java.simpleName
     }
 
-    val countriesList: MutableLiveData<List<Country>> = MutableLiveData(mutableListOf())
+    val countriesBordersMap: MutableLiveData<Map<String, List<Country?>>> =
+        MutableLiveData(hashMapOf())
+    val countriesMap: MutableLiveData<Map<String, Country>> = MutableLiveData(hashMapOf())
     val countryDownloadErrorEvent = MutableLiveData<MatrixAssignmentEvent>()
 
     /**
-     * Starting a download process for the audio data found in the QR barcode's response URL
+     * Starting a downloading the countries data
      */
-    fun requestAudioDataList() {
-        Log.d(TAG, "Starting audio data download")
+    fun requestCountries() {
+        Log.d(TAG, "Starting countries data download")
         viewModelScope.launch(Dispatchers.IO) {
             countriesRepository.fetchCountries(object :
                 NetworkCallback<List<Country>> {
                 override fun onSuccess(result: List<Country>) {
-                    countriesList.postValue(result)
+                    countriesMap.postValue(generateCountriesMap(result))
+                    countriesBordersMap.postValue(generateCountriesBordersMap(result))
                 }
 
                 override fun onFailure(error: String) {
@@ -46,6 +47,44 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
                 }
             })
         }
+    }
+
+    fun getCountriesDataDescendingOrder(): List<Country> {
+        return countriesMap.value?.values!!.sortedByDescending { it.name }
+    }
+
+    fun getCountriesDataAscendingOrder(): List<Country> {
+        return countriesMap.value?.values!!.sortedBy { it.name }
+    }
+
+    /**
+     * Generating a new countries map. Each country value will be assigned to its alpha3Code key
+     * * @return A map of countries
+     */
+    private fun generateCountriesMap(countriesList: List<Country>): Map<String, Country> {
+        val result = hashMapOf<String, Country>()
+        countriesList.forEach {
+            result[it.alpha3Code] = it
+        }
+        return result
+    }
+
+    /**
+     * Generating a map linking between a country alpha3Code to a list of its bordering Countries
+     * @return A map of the bordering countries
+     */
+    private fun generateCountriesBordersMap(countriesList: List<Country>): Map<String, List<Country?>> {
+        val result = hashMapOf<String, List<Country?>>()
+        countriesList.forEach { country ->
+            val borderingCountries = mutableListOf<Country?>()
+            country.borders?.forEach { borderingCountryCode ->
+                countriesMap.value?.get(borderingCountryCode)?.let {
+                    borderingCountries.add(it)
+                }
+            }
+            result[country.alpha3Code] = borderingCountries.toList()
+        }
+        return result
     }
 
 

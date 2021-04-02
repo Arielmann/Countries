@@ -1,10 +1,14 @@
 package com.example.matrixassignment.countriesdatascreen.view
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
@@ -35,22 +39,27 @@ class CountriesDataFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupDataObservation()
-        setupAudioFilesList()
-        viewModel.requestAudioDataList()
+        setupCountriesList()
+        requestCountries()
+        binding.countriesListRestartProcessIV.setOnClickListener { requestCountries() }
+    }
+
+    private fun requestCountries() {
+        viewModel.requestCountries()
         showDownloadInProgressUI()
     }
 
     /**
-     * Starts audio files data observation via the fragment's viewModel.
-     * When the observer is activated, it's data will be displayed in the audio files list
+     * Starts countries data observation via the fragment's viewModel.
+     * When the observer is activated, it's data will be displayed in the countries list
      */
     private fun setupDataObservation() {
-        viewModel.countriesList.observe(viewLifecycleOwner, { audioFiles ->
-            audioFiles?.let {
-                Log.d(TAG, "Audio file data received from viewModel")
-                countriesAdapter.submitList(audioFiles)
+        viewModel.countriesMap.observe(viewLifecycleOwner, { countries ->
+            countries?.let {
+                Log.d(TAG, "New countries received from viewModel")
+                countriesAdapter.submitList(viewModel.getCountriesDataAscendingOrder())
                 hideProgressionUI()
-            } ?: Log.w(TAG, "No audio data received")
+            } ?: Log.w(TAG, "No countries data received")
         })
 
         observeFailureScenario(
@@ -64,19 +73,19 @@ class CountriesDataFragment : Fragment() {
      * Displaying the title and progressbar and hiding any error messages\views
      */
     private fun showDownloadInProgressUI() {
-        binding.progressBar.show()
-        binding.restartProcessIV.visibility = View.INVISIBLE
-        binding.errorTV.visibility = View.INVISIBLE
-        binding.titleTV.visibility = View.VISIBLE
+        Handler(Looper.getMainLooper()).postDelayed({binding.countriesListProgressBar.show()}, 1)
+        binding.countriesListRestartProcessIV.visibility = View.GONE
+        binding.countriesListTitleTV.visibility = View.VISIBLE
+        binding.countriesListErrorTV.visibility = View.INVISIBLE
     }
 
     /**
      * Hiding the progressbar and hiding any error messages\views
      */
     private fun hideProgressionUI() {
-        binding.progressBar.hide()
-        binding.errorTV.visibility = View.INVISIBLE
-        binding.titleTV.visibility = View.VISIBLE
+        binding.countriesListProgressBar.hide()
+        binding.countriesListTitleTV.visibility = View.VISIBLE
+        binding.countriesListErrorTV.visibility = View.INVISIBLE
     }
 
 
@@ -88,7 +97,8 @@ class CountriesDataFragment : Fragment() {
      */
     private fun observeFailureScenario(
         event: MutableLiveData<MatrixAssignmentEvent>,
-        message: String = getString(R.string.error_unknown_failure)) {
+        message: String = getString(R.string.error_unknown_failure)
+    ) {
         event.observe(viewLifecycleOwner, { result ->
             result?.let {
                 if (result.message.isNotBlank()) {
@@ -101,34 +111,41 @@ class CountriesDataFragment : Fragment() {
     }
 
     /**
-     * Sets the audio data list
+     * Sets the countries list
      */
-    private fun setupAudioFilesList() {
+    private fun setupCountriesList() {
         countriesAdapter = CountriesAdapter()
 
         countriesAdapter.onItemClickListener = { country ->
             Log.d(TAG, "Navigating to country ${country.name}")
-            val action = CountriesDataFragmentDirections.navigateToCountryBorders(country)
-            findNavController().navigate(action)
+            viewModel.countriesBordersMap.value!![country.alpha3Code]?.let {
+                val action = CountriesDataFragmentDirections.navigateToCountryBorders(it.toTypedArray())
+                findNavController().navigate(action)
+            } ?: Toast.makeText(
+                requireContext(),
+                getString(R.string.error_cannot_access_borders),
+                LENGTH_LONG
+            ).show()
+
         }
 
-        binding.audioDataRV.apply {
+        binding.countriesListRV.apply {
             adapter = countriesAdapter
             layoutManager = LinearLayoutManager(this@CountriesDataFragment.requireContext())
         }
     }
 
     /**
-     * Displayed whenever the image request operation ends with an error
+     * Displayed whenever the data request operation ends with an error
      */
     private fun onDataDisplayRequestFailed(reason: String) {
         Log.d(TAG, reason)
-        binding.progressBar.hide()
-        binding.errorTV.text = reason
-        binding.errorTV.visibility = View.VISIBLE
-        binding.titleTV.visibility = View.INVISIBLE
-        binding.restartProcessIV.visibility = View.VISIBLE
-        binding.restartProcessIV.setImageResource(R.drawable.ic_baseline_refresh_gray_48)
+        binding.countriesListProgressBar.hide()
+        binding.countriesListErrorTV.text = reason
+        binding.countriesListErrorTV.visibility = View.VISIBLE
+        binding.countriesListTitleTV.visibility = View.INVISIBLE
+        binding.countriesListRestartProcessIV.visibility = View.VISIBLE
+        binding.countriesListRestartProcessIV.setImageResource(R.drawable.ic_baseline_refresh_gray_48)
     }
 
 }

@@ -12,7 +12,11 @@
 
         <action
             android:id="@+id/navigate_to_country_borders"
-            app:destination="@id/countryBordersFragment" />
+            app:destination="@id/countryBordersFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
 
     </fragment>
 
@@ -22,8 +26,8 @@
         tools:layout="@layout/fragment_country_borders">
 
         <argument
-            android:name="@string/key_chosen_country"
-            app:argType="com.example.matrixassignment.countriesdatascreen.model.Country" />
+            android:name="@string/key_bordering_countries"
+            app:argType="com.example.matrixassignment.countriesdatascreen.model.Country[]" />
 
     </fragment>
 
