@@ -1,4 +1,4 @@
-package com.example.matrixassignment.countriesdatascreen.adapterhelpers
+package com.example.matrixassignment.crossapplication.adapterhelpers
 
 /**
  * An interface to determine for each model in the app what its unique name.

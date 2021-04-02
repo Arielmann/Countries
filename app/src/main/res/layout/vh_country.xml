@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/audioDataListMainCardView"
+    android:id="@+id/countryMainCardView"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:clipToPadding="false"
@@ -13,7 +13,7 @@
     card:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/audioDataListViewHolderCL"
+        android:id="@+id/countryViewHolderCL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="16dp"
@@ -24,49 +24,36 @@
         card:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/audioDataListViewHolderNameTV"
+            android:id="@+id/countryViewHolderNameTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:maxHeight="150dp"
-            android:text="File Name"
-            android:textAlignment="gravity"
+            android:text="Name"
+            android:gravity="left"
             android:textSize="17sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            card:layout_constraintEnd_toStartOf="@+id/audioDataViewHolderPlayPauseIV"
             card:layout_constraintStart_toStartOf="parent"
             card:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/audioDataListViewHolderURLTV"
+            android:id="@+id/countryViewHolderNativeNameTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:maxHeight="150dp"
-            android:text="url.wav"
-            android:textAlignment="gravity"
+            android:text="Native name"
+            android:gravity="left"
             android:textSize="13sp"
             card:layout_constraintBottom_toBottomOf="parent"
-            card:layout_constraintEnd_toEndOf="@+id/audioDataListViewHolderNameTV"
+            card:layout_constraintEnd_toEndOf="@+id/countryViewHolderNameTV"
             card:layout_constraintStart_toStartOf="parent"
-            card:layout_constraintTop_toBottomOf="@+id/audioDataListViewHolderNameTV"
+            card:layout_constraintTop_toBottomOf="@+id/countryViewHolderNameTV"
             tools:ignore="HardcodedText" />
-
-        <ImageView
-            android:id="@+id/audioDataViewHolderPlayPauseIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            card:layout_constraintBottom_toBottomOf="parent"
-            card:layout_constraintEnd_toEndOf="parent"
-            card:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_play_black" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,11 +1,11 @@
-package com.example.matrixassignment.countriesdatascreen.utils
+package com.example.matrixassignment.crossapplication.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
-import com.example.matrixassignment.countriesdatascreen.app.DemoSDKApp
+import com.example.matrixassignment.crossapplication.app.MatrixAssignmentApp
 import okhttp3.ResponseBody
 import java.io.File
 
@@ -63,7 +63,7 @@ object Utils {
 
         try {
 
-            DemoSDKApp.context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
+            MatrixAssignmentApp.context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
                 it.write(body.bytes())
             }
             Log.d(TAG, "Audio file $fileName saved in path: $fileName")
@@ -83,7 +83,7 @@ object Utils {
      * @return A dir where the audio files are to be saved
      */
     fun getAudioFilesParentDir(): File {
-        return DemoSDKApp.context.filesDir
+        return MatrixAssignmentApp.context.filesDir
     }
 
 }

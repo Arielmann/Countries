@@ -1,4 +1,4 @@
-package com.example.matrixassignment.countriesdatascreen.adapterhelpers
+package com.example.matrixassignment.crossapplication.adapterhelpers
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil

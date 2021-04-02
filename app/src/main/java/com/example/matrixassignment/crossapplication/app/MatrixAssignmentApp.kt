@@ -1,4 +1,4 @@
-package com.example.matrixassignment.countriesdatascreen.app
+package com.example.matrixassignment.crossapplication.app
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -6,10 +6,10 @@ import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class DemoSDKApp : Application() {
+class MatrixAssignmentApp : Application() {
 
     companion object {
-        @Suppress("unused") val APP_TAG = DemoSDKApp::class.simpleName
+        @Suppress("unused") val APP_TAG = MatrixAssignmentApp::class.simpleName
         @SuppressLint("StaticFieldLeak") //It's the app's context. It should move around freely and get collected when the app gets terminated
         lateinit var context: Context
     }

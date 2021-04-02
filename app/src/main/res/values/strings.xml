@@ -12,4 +12,7 @@
     <string name="error_cannot_play_audio">Cannot play audio file, please restart the app and try again</string>
 
     <string name="token">token</string>
+    <string name="title_world_countries">World countries</string>
+    <string name="title_bounding_countries">Bounding countries</string>
+    <string name="key_chosen_country">chosen_country</string>
 </resources>

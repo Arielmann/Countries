@@ -11,20 +11,19 @@
         tools:layout="@layout/fragment_countries_data">
 
         <action
-            android:id="@+id/navigate_to_welcome"
-            app:destination="@id/welcomeFragment" />
+            android:id="@+id/navigate_to_country_borders"
+            app:destination="@id/countryBordersFragment" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/welcomeFragment"
+        android:id="@+id/countryBordersFragment"
         android:name="com.example.matrixassignment.countrybordersscreen.view.CountryBordersFragment"
-        tools:layout="@layout/fragment_country_border">
+        tools:layout="@layout/fragment_country_borders">
 
         <argument
-            android:name="@string/token"
-            android:defaultValue=""
-            app:argType="string" />
+            android:name="@string/key_chosen_country"
+            app:argType="com.example.matrixassignment.countriesdatascreen.model.Country" />
 
     </fragment>
 
