@@ -36,11 +36,7 @@ class CountriesDataFragment : Fragment() {
     private lateinit var binding: FragmentCountriesDataBinding
     private val viewModel: CountriesDataViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCountriesDataBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -55,8 +51,8 @@ class CountriesDataFragment : Fragment() {
     }
 
     private fun requestCountries() {
-        viewModel.requestCountries()
         showDownloadInProgressUI()
+        viewModel.requestCountries()
     }
 
     private fun setupToolbar() {
@@ -160,10 +156,7 @@ class CountriesDataFragment : Fragment() {
      * @param event The occurring event
      * @param message Message to be displayed to the user
      */
-    private fun observeFailureScenario(
-        event: MutableLiveData<MatrixAssignmentEvent>,
-        message: String = getString(R.string.error_unknown_failure)
-    ) {
+    private fun observeFailureScenario(event: MutableLiveData<MatrixAssignmentEvent>, message: String = getString(R.string.error_unknown_failure)) {
         event.observe(viewLifecycleOwner, { result ->
             result?.let {
                 if (result.message.isNotBlank()) {
@@ -180,19 +173,12 @@ class CountriesDataFragment : Fragment() {
      */
     private fun setupCountriesList() {
         countriesAdapter = CountriesAdapter()
-
         countriesAdapter.onItemClickListener = { country ->
             Log.d(TAG, "Navigating to country ${country.name}")
             viewModel.countriesBordersMap.value!![country.alpha3Code]?.let {
-                val action =
-                    CountriesDataFragmentDirections.navigateToCountryBorders(it.toTypedArray())
+                val action = CountriesDataFragmentDirections.navigateToCountryBorders(it.toTypedArray())
                 findNavController().navigate(action)
-            } ?: Toast.makeText(
-                requireContext(),
-                getString(R.string.error_cannot_access_borders),
-                LENGTH_LONG
-            ).show()
-
+            } ?: Toast.makeText(requireContext(), getString(R.string.error_cannot_access_borders), LENGTH_LONG).show()
         }
 
         binding.countriesListRV.apply {
@@ -203,6 +189,7 @@ class CountriesDataFragment : Fragment() {
 
     /**
      * Displayed whenever the data request operation ends with an error
+     * @param reason Error's reason
      */
     private fun onDataDisplayRequestFailed(reason: String) {
         Log.d(TAG, reason)

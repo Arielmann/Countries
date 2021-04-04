@@ -27,7 +27,8 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
         private val TAG: String? = CountriesDataViewModel::class.java.simpleName
     }
 
-    val countriesBordersMap: MutableLiveData<Map<String, List<Country?>>> = MutableLiveData(hashMapOf())
+    val countriesBordersMap: MutableLiveData<Map<String, List<Country?>>> =
+        MutableLiveData(hashMapOf())
     val countriesMap: MutableLiveData<Map<String, Country>> = MutableLiveData(hashMapOf())
     val countryDownloadErrorEvent = MutableLiveData<MatrixAssignmentEvent>()
     private val countriesSorter = CountriesSorter()
@@ -37,6 +38,12 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
      */
     fun requestCountries() {
         Log.d(TAG, "Starting countries data download")
+
+ /*       if (countriesMap.value!!.values.isNotEmpty()) {
+            Log.d(TAG, "No need to re-download data as it is only needs to be downloaded once")
+            return
+        }*/
+
         viewModelScope.launch(Dispatchers.IO) {
             countriesRepository.fetchCountries(object :
                 NetworkCallback<List<Country>> {
@@ -55,7 +62,7 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
     /**
      * Sorting the countries array by the predefined [CountriesSorter]
      */
-    fun requestSorting():List<Country> {
+    fun requestSorting(): List<Country> {
         return countriesMap.value?.values!!.sortedWith(countriesSorter.getComparator())
     }
 

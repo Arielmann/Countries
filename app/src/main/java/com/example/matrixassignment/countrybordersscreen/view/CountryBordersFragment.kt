@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.matrixassignment.countriesdatascreen.model.Country
 import com.example.matrixassignment.countriesdatascreen.view.CountriesAdapter
@@ -52,6 +54,5 @@ class CountryBordersFragment : Fragment() {
             countriesAdapter.submitList(borderingCountries.toList())
         }
     }
-
 
 }
