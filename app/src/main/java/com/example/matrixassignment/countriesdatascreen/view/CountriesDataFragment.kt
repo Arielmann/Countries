@@ -9,11 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.matrixassignment.countriesdatascreen.model.CountrySortStrategy
+import com.example.matrixassignment.countriesdatascreen.model.OrderStrategy
 import com.example.matrixassignment.crossapplication.events.MatrixAssignmentEvent
 import com.example.matrixassignment.countriesdatascreen.viewmodel.CountriesDataViewModel
 import com.example.maytronicstestapp.R
@@ -25,13 +28,19 @@ class CountriesDataFragment : Fragment() {
 
     companion object {
         val TAG: String = CountriesDataFragment::class.java.simpleName
+        private const val UPWARD_ARROW_MENU_ITEM_POSITION: Int = 1
+        private const val DOWNWARD_ARROW_MENU_ITEM_POSITION: Int = 2
     }
 
     private lateinit var countriesAdapter: CountriesAdapter
     private lateinit var binding: FragmentCountriesDataBinding
     private val viewModel: CountriesDataViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentCountriesDataBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -41,12 +50,68 @@ class CountriesDataFragment : Fragment() {
         setupDataObservation()
         setupCountriesList()
         requestCountries()
+        setupToolbar()
         binding.countriesListRestartProcessIV.setOnClickListener { requestCountries() }
     }
 
     private fun requestCountries() {
         viewModel.requestCountries()
         showDownloadInProgressUI()
+    }
+
+    private fun setupToolbar() {
+        binding.letterGeneratorToolBar.inflateMenu(R.menu.countries_menu)
+
+        binding.letterGeneratorToolBar.setOnMenuItemClickListener { item ->
+            when (item?.itemId) {
+
+                R.id.menuActionAscendingOrder -> {
+                    countriesAdapter.submitList(viewModel.requestSorting(OrderStrategy.ASCENDING)) {
+                        binding.countriesListRV.layoutManager?.scrollToPosition(0)
+                        setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_selected_24)
+                        setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_24)
+                    }
+                    true
+                }
+
+                R.id.menuActionDescendingOrder -> {
+                    countriesAdapter.submitList(viewModel.requestSorting(OrderStrategy.DESCENDING)) {
+                        binding.countriesListRV.layoutManager?.scrollToPosition(0)
+                        setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_24)
+                        setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_selected_24)
+                    }
+                    true
+                }
+
+                R.id.menuActionSortByNativeName -> {
+                    countriesAdapter.submitList(viewModel.requestSorting(CountrySortStrategy.NATIVE_NAME)) {
+                        binding.countriesListRV.layoutManager?.scrollToPosition(0)
+                    }
+                    true
+                }
+
+                R.id.menuActionSortByArea -> {
+                    countriesAdapter.submitList(viewModel.requestSorting(CountrySortStrategy.AREA)) {
+                        binding.countriesListRV.layoutManager?.scrollToPosition(0)
+                    }
+                    true
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    private fun setUpwardArrowImage(@DrawableRes icon: Int) {
+        if (binding.letterGeneratorToolBar.menu.getItem(UPWARD_ARROW_MENU_ITEM_POSITION) != null) { //If menu is inflated
+            binding.letterGeneratorToolBar.menu.getItem(UPWARD_ARROW_MENU_ITEM_POSITION).setIcon(icon)
+        }
+    }
+
+    private fun setDownwardArrowImage(@DrawableRes icon: Int) {
+        if (binding.letterGeneratorToolBar.menu.getItem(DOWNWARD_ARROW_MENU_ITEM_POSITION) != null) { //If menu is inflated
+            binding.letterGeneratorToolBar.menu.getItem(DOWNWARD_ARROW_MENU_ITEM_POSITION).setIcon(icon)
+        }
     }
 
     /**
@@ -57,7 +122,7 @@ class CountriesDataFragment : Fragment() {
         viewModel.countriesMap.observe(viewLifecycleOwner, { countries ->
             countries?.let {
                 Log.d(TAG, "New countries received from viewModel")
-                countriesAdapter.submitList(viewModel.getCountriesDataAscendingOrder())
+                countriesAdapter.submitList(viewModel.requestSorting())
                 hideProgressionUI()
             } ?: Log.w(TAG, "No countries data received")
         })
@@ -73,7 +138,7 @@ class CountriesDataFragment : Fragment() {
      * Displaying the title and progressbar and hiding any error messages\views
      */
     private fun showDownloadInProgressUI() {
-        Handler(Looper.getMainLooper()).postDelayed({binding.countriesListProgressBar.show()}, 1)
+        Handler(Looper.getMainLooper()).postDelayed({ binding.countriesListProgressBar.show() }, 1)
         binding.countriesListRestartProcessIV.visibility = View.GONE
         binding.countriesListTitleTV.visibility = View.VISIBLE
         binding.countriesListErrorTV.visibility = View.INVISIBLE
@@ -119,7 +184,8 @@ class CountriesDataFragment : Fragment() {
         countriesAdapter.onItemClickListener = { country ->
             Log.d(TAG, "Navigating to country ${country.name}")
             viewModel.countriesBordersMap.value!![country.alpha3Code]?.let {
-                val action = CountriesDataFragmentDirections.navigateToCountryBorders(it.toTypedArray())
+                val action =
+                    CountriesDataFragmentDirections.navigateToCountryBorders(it.toTypedArray())
                 findNavController().navigate(action)
             } ?: Toast.makeText(
                 requireContext(),

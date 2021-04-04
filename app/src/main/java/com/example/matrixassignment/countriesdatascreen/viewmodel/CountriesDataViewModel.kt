@@ -4,8 +4,11 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.matrixassignment.countriesdatascreen.model.CountriesSorter
 import com.example.matrixassignment.crossapplication.events.MatrixAssignmentEvent
 import com.example.matrixassignment.countriesdatascreen.model.Country
+import com.example.matrixassignment.countriesdatascreen.model.CountrySortStrategy
+import com.example.matrixassignment.countriesdatascreen.model.OrderStrategy
 import com.example.matrixassignment.countriesdatascreen.network.NetworkCallback
 import com.example.matrixassignment.countriesdatascreen.repository.CountriesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,10 +27,10 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
         private val TAG: String? = CountriesDataViewModel::class.java.simpleName
     }
 
-    val countriesBordersMap: MutableLiveData<Map<String, List<Country?>>> =
-        MutableLiveData(hashMapOf())
+    val countriesBordersMap: MutableLiveData<Map<String, List<Country?>>> = MutableLiveData(hashMapOf())
     val countriesMap: MutableLiveData<Map<String, Country>> = MutableLiveData(hashMapOf())
     val countryDownloadErrorEvent = MutableLiveData<MatrixAssignmentEvent>()
+    private val countriesSorter = CountriesSorter()
 
     /**
      * Starting a downloading the countries data
@@ -49,8 +52,29 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
         }
     }
 
-    fun getCountriesDataDescendingOrder(): List<Country> {
-        return countriesMap.value?.values!!.sortedByDescending { it.name }
+    /**
+     * Sorting the countries array by the predefined [CountriesSorter]
+     */
+    fun requestSorting():List<Country> {
+        return countriesMap.value?.values!!.sortedWith(countriesSorter.getComparator())
+    }
+
+    /**
+     * Sorting the countries array by a given [CountrySortStrategy]
+     * @param sortStrategy The strategy used for sorting
+     */
+    fun requestSorting(sortStrategy: CountrySortStrategy): List<Country> {
+        countriesSorter.sortStrategy = sortStrategy
+        return countriesMap.value?.values!!.sortedWith(countriesSorter.getComparator())
+    }
+
+    /**
+     * Sorting the countries array by a given [OrderStrategy]
+     * @param orderStrategy The strategy used for sorting
+     */
+    fun requestSorting(orderStrategy: OrderStrategy): List<Country> {
+        countriesSorter.orderStrategy = orderStrategy
+        return countriesMap.value?.values!!.sortedWith(countriesSorter.getComparator())
     }
 
     fun getCountriesDataAscendingOrder(): List<Country> {
@@ -86,6 +110,5 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
         }
         return result
     }
-
 
 }

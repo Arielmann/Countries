@@ -28,6 +28,7 @@ class CountriesAdapter : ListAdapter<Country, CountriesAdapter.AudioDataViewHold
         fun bind(country: Country) {
             binding.countryViewHolderNameTV.text = country.name
             binding.countryViewHolderNativeNameTV.text = country.nativeName
+            binding.countryViewHolderAreaTV.text = country.area.toString()
             binding.root.setOnClickListener {
                 onItemClickListener?.invoke(country)
             }

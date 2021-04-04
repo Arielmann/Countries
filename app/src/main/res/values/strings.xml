@@ -1,8 +1,8 @@
 <resources>
+
     <string name="app_name">Countries</string>
 
-    <!--Readable text-->
-    <string name="cancelled">Cancelled</string>
+    <string name="key_bordering_countries">key_bordering_countries</string>
 
     <string name="error_null_event">A null error event was sent</string>
     <string name="error_unknown_failure">An unknown error has occurred</string>
@@ -12,5 +12,9 @@
     <string name="title_world_countries">World countries</string>
     <string name="title_bordering_countries">Bordering countries</string>
     <string name="title_no_bordering_countries">No bordering countries</string>
-    <string name="key_bordering_countries">key_bordering_countries</string>
+    <string name="title_native_name">Sort by native name</string>
+    <string name="title_area">Sort by area</string>
+    <string name="title_descending">Ascending or Descending</string>
+    <string name="title_ascending">Ascending</string>
+
 </resources>
