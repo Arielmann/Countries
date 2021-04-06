@@ -4,14 +4,11 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
-import com.example.matrixassignment.crossapplication.app.MatrixAssignmentApp
-import okhttp3.ResponseBody
-import java.io.File
 
 
 object Utils {
 
+    @Suppress("unused")
     private val TAG = Utils::class.simpleName
 
     /**
@@ -51,39 +48,5 @@ object Utils {
         return false
     }
 
-    /**
-     * Saving an audio file to the device's cache
-     *
-     * @param body The body containing the file's data
-     * @param fileName Name of the saved file
-     *
-     * @return true if the file was successfully saved
-     */
-    fun saveAudioFile(body: ResponseBody, fileName: String): Boolean {
-
-        try {
-
-            MatrixAssignmentApp.context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
-                it.write(body.bytes())
-            }
-            Log.d(TAG, "Audio file $fileName saved in path: $fileName")
-            return true
-
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-        Log.e(TAG, "Error in file saving for file $fileName")
-        return false
-    }
-
-
-    /**
-     * Obtains the dir where the audio files are to be saved
-     *
-     * @return A dir where the audio files are to be saved
-     */
-    fun getAudioFilesParentDir(): File {
-        return MatrixAssignmentApp.context.filesDir
-    }
 
 }

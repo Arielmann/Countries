@@ -6,21 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/grayFade">
 
-    <TextView
-        android:id="@+id/countriesListTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/title_world_countries"
-        android:textColor="@color/black"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/letterGeneratorAppBar"
+        android:id="@+id/borderingCountriesAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,11 +15,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/letterGeneratorToolBar"
+            android:id="@+id/borderCountriesToolBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:titleTextColor="@color/white"
-            android:background="@color/design_default_color_primary"
+            android:background="@color/blue_purple"
             app:title="@string/app_name" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -46,7 +33,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/countriesListTitleTV" />
+        app:layout_constraintTop_toBottomOf="@+id/borderingCountriesAppBar" />
 
     <ImageView
         android:id="@+id/countriesListRestartProcessIV"
@@ -67,7 +54,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:indeterminate="true"
-        android:indeterminateTint="@color/design_default_color_primary"
+        android:indeterminateTint="@color/blue_purple"
         android:max="100"
         android:minWidth="200dp"
         android:minHeight="50dp"

@@ -2,7 +2,6 @@ package com.example.matrixassignment
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.maytronicstestapp.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

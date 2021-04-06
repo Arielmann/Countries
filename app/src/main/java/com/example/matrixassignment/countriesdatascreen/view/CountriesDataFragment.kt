@@ -1,8 +1,6 @@
 package com.example.matrixassignment.countriesdatascreen.view
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +13,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.matrixassignment.R
+import com.example.matrixassignment.countriesdatascreen.model.CountryOrderStrategy
 import com.example.matrixassignment.countriesdatascreen.model.CountrySortStrategy
-import com.example.matrixassignment.countriesdatascreen.model.OrderStrategy
-import com.example.matrixassignment.crossapplication.events.MatrixAssignmentEvent
 import com.example.matrixassignment.countriesdatascreen.viewmodel.CountriesDataViewModel
+import com.example.matrixassignment.crossapplication.events.MatrixAssignmentEvent
 import com.example.matrixassignment.crossapplication.utils.observeAndIgnoreInitialNotification
-import com.example.maytronicstestapp.R
-import com.example.maytronicstestapp.databinding.FragmentCountriesDataBinding
+import com.example.matrixassignment.databinding.FragmentCountriesDataBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -58,27 +56,27 @@ class CountriesDataFragment : Fragment() {
      * Setting up the toolbar for user communication
      */
     private fun setupToolbar() {
-        binding.letterGeneratorToolBar.inflateMenu(R.menu.countries_menu)
+        binding.borderCountriesToolBar.inflateMenu(R.menu.countries_menu)
 
-        binding.letterGeneratorToolBar.setOnMenuItemClickListener { item ->
+        binding.borderCountriesToolBar.setOnMenuItemClickListener { item ->
             when (item?.itemId) {
 
                 R.id.menuActionAscendingOrder -> {
-                    countriesAdapter.submitList(viewModel.requestDisplayOrder(OrderStrategy.ASCENDING)) {
+                    countriesAdapter.submitList(viewModel.requestDisplayOrder(CountryOrderStrategy.ASCENDING)) {
                         binding.countriesListRV.layoutManager?.scrollToPosition(0)
                     }
                     true
                 }
 
                 R.id.menuActionDescendingOrder -> {
-                    countriesAdapter.submitList(viewModel.requestDisplayOrder(OrderStrategy.DESCENDING)) {
+                    countriesAdapter.submitList(viewModel.requestDisplayOrder(CountryOrderStrategy.DESCENDING)) {
                         binding.countriesListRV.layoutManager?.scrollToPosition(0)
                     }
                     true
                 }
 
-                R.id.menuActionSortByNativeName -> {
-                    countriesAdapter.submitList(viewModel.requestDisplayOrder(CountrySortStrategy.NATIVE_NAME)) {
+                R.id.menuActionSortByName -> {
+                    countriesAdapter.submitList(viewModel.requestDisplayOrder(CountrySortStrategy.NAME)) {
                         binding.countriesListRV.layoutManager?.scrollToPosition(0)
                     }
                     true
@@ -100,9 +98,8 @@ class CountriesDataFragment : Fragment() {
      * Setting menu images when user wants to display data in ascending order
      */
     private fun setUpwardArrowImage(@DrawableRes icon: Int) {
-        if (binding.letterGeneratorToolBar.menu.getItem(UPWARD_ARROW_MENU_ITEM_POSITION) != null) { //If menu is inflated
-            binding.letterGeneratorToolBar.menu.getItem(UPWARD_ARROW_MENU_ITEM_POSITION)
-                .setIcon(icon)
+        if (binding.borderCountriesToolBar.menu.getItem(UPWARD_ARROW_MENU_ITEM_POSITION) != null) { //If menu is inflated
+            binding.borderCountriesToolBar.menu.getItem(UPWARD_ARROW_MENU_ITEM_POSITION).setIcon(icon)
         }
     }
 
@@ -110,9 +107,8 @@ class CountriesDataFragment : Fragment() {
      * Setting menu images when user wants to display data in descending order
      */
     private fun setDownwardArrowImage(@DrawableRes icon: Int) {
-        if (binding.letterGeneratorToolBar.menu.getItem(DOWNWARD_ARROW_MENU_ITEM_POSITION) != null) { //If menu is inflated
-            binding.letterGeneratorToolBar.menu.getItem(DOWNWARD_ARROW_MENU_ITEM_POSITION)
-                .setIcon(icon)
+        if (binding.borderCountriesToolBar.menu.getItem(DOWNWARD_ARROW_MENU_ITEM_POSITION) != null) { //If menu is inflated
+            binding.borderCountriesToolBar.menu.getItem(DOWNWARD_ARROW_MENU_ITEM_POSITION).setIcon(icon)
         }
     }
 
@@ -131,20 +127,20 @@ class CountriesDataFragment : Fragment() {
 
         observeFailureScenario(
             viewModel.onCountryDownloadErrorEvent,
-            getString(R.string.error_audio_data_fetch_failed)
+            getString(R.string.error_countries_data_fetch_failed)
         )
 
         viewModel.onDescendingDisplayRequired.observeAndIgnoreInitialNotification(viewLifecycleOwner, {
-            Log.d(TAG, "onDescendingDisplayRequired")
-            setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_24)
-            setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_selected_24)
-        })
+                Log.d(TAG, "onDescendingDisplayRequired")
+                setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_24)
+                setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_selected_24)
+            })
 
         viewModel.onAscendingDisplayRequired.observeAndIgnoreInitialNotification(viewLifecycleOwner, {
-            Log.d(TAG, "onAscendingDisplayRequired")
-            setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_selected_24)
-            setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_24)
-        })
+                Log.d(TAG, "onAscendingDisplayRequired")
+                setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_selected_24)
+                setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_24)
+            })
 
         viewModel.onDownloadProcessStarted.observeAndIgnoreInitialNotification(viewLifecycleOwner, {
             Log.d(TAG, "onDownloadProcessStarted")
@@ -157,9 +153,8 @@ class CountriesDataFragment : Fragment() {
      * Displaying the title and progressbar and hiding any error messages\views
      */
     private fun showDownloadInProgressUI() {
-        Handler(Looper.getMainLooper()).postDelayed({ binding.countriesListProgressBar.show() }, 1)
+        binding.countriesListProgressBar.show()
         binding.countriesListRestartProcessIV.visibility = View.GONE
-        binding.countriesListTitleTV.visibility = View.VISIBLE
         binding.countriesListErrorTV.visibility = View.INVISIBLE
     }
 
@@ -168,7 +163,6 @@ class CountriesDataFragment : Fragment() {
      */
     private fun hideProgressionUI() {
         binding.countriesListProgressBar.hide()
-        binding.countriesListTitleTV.visibility = View.VISIBLE
         binding.countriesListErrorTV.visibility = View.INVISIBLE
     }
 
@@ -180,7 +174,7 @@ class CountriesDataFragment : Fragment() {
      * @param message Message to be displayed to the user
      */
     private fun observeFailureScenario(event: MutableLiveData<MatrixAssignmentEvent>, message: String = getString(R.string.error_unknown_failure)) {
-        event.observe(viewLifecycleOwner, { result ->
+        event.observeAndIgnoreInitialNotification(viewLifecycleOwner, { result ->
             result?.let {
                 if (result.message.isNotBlank()) {
                     onDataDisplayRequestFailed(result.message)
@@ -201,11 +195,7 @@ class CountriesDataFragment : Fragment() {
             viewModel.countriesBordersMap.value!![country.alpha3Code]?.let {
                 val action = CountriesDataFragmentDirections.navigateToCountryBorders(it.toTypedArray())
                 findNavController().navigate(action)
-            } ?: Toast.makeText(
-                requireContext(),
-                getString(R.string.error_cannot_access_borders),
-                LENGTH_LONG
-            ).show()
+            } ?: Toast.makeText(requireContext(), getString(R.string.error_cannot_access_borders), LENGTH_LONG).show()
         }
 
         binding.countriesListRV.apply {
@@ -223,7 +213,6 @@ class CountriesDataFragment : Fragment() {
         binding.countriesListProgressBar.hide()
         binding.countriesListErrorTV.text = reason
         binding.countriesListErrorTV.visibility = View.VISIBLE
-        binding.countriesListTitleTV.visibility = View.INVISIBLE
         binding.countriesListRestartProcessIV.visibility = View.VISIBLE
         binding.countriesListRestartProcessIV.setImageResource(R.drawable.ic_baseline_refresh_gray_48)
     }

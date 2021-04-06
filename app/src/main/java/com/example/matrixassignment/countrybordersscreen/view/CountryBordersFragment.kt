@@ -1,15 +1,18 @@
 package com.example.matrixassignment.countrybordersscreen.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.matrixassignment.R
 import com.example.matrixassignment.countriesdatascreen.model.Country
 import com.example.matrixassignment.countriesdatascreen.view.CountriesAdapter
 import com.example.matrixassignment.countrybordersscreen.view.CountryBordersFragmentArgs.fromBundle
-import com.example.maytronicstestapp.databinding.FragmentCountryBordersBinding
+import com.example.matrixassignment.databinding.FragmentCountryBordersBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -18,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CountryBordersFragment : Fragment() {
 
-    lateinit var borderingCountries: Array<Country>
+    private lateinit var borderingCountries: Array<Country>
 
     companion object {
         private val TAG: String? = CountryBordersFragment::class.simpleName
@@ -35,7 +38,16 @@ class CountryBordersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         borderingCountries = fromBundle(requireArguments()).stringKeyBorderingCountries
+        setupToolbar()
         setupBorderingCountriesList()
+    }
+
+    private fun setupToolbar() {
+        binding.countriesToolBar.setNavigationIcon(R.drawable.ic_arrow_back_24)
+        binding.countriesToolBar.setNavigationOnClickListener {
+            Log.d(TAG, "Navigating to countries list")
+            findNavController().popBackStack()
+        }
     }
 
     /**

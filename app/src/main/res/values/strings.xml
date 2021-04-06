@@ -6,15 +6,15 @@
 
     <string name="error_null_event">A null error event was sent</string>
     <string name="error_unknown_failure">An unknown error has occurred</string>
-    <string name="error_audio_data_fetch_failed">Error: could not download countries data list</string>
+    <string name="error_countries_data_fetch_failed">Error: could not download countries data list</string>
     <string name="error_cannot_access_borders">Error: cannot access borders for this country</string>
 
     <string name="title_world_countries">World countries</string>
-    <string name="title_bordering_countries">Bordering countries</string>
+    <string name="title_bordering_countries">Country\'s borders</string>
     <string name="title_no_bordering_countries">No bordering countries</string>
-    <string name="title_native_name">Sort by native name</string>
-    <string name="title_area">Sort by area</string>
-    <string name="title_descending">Ascending or Descending</string>
-    <string name="title_ascending">Ascending</string>
+    <string name="title_sort_by_name">Order by name</string>
+    <string name="title_sort_by_area">Order by area</string>
+    <string name="title_descending">Sort by descending</string>
+    <string name="title_ascending">Sort by ascending</string>
 
 </resources>

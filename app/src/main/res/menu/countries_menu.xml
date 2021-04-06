@@ -36,17 +36,17 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menuActionSortByNativeName"
+        android:id="@+id/menuActionSortByName"
         android:gravity="left"
         android:orderInCategory="50"
-        android:title="@string/title_native_name"
+        android:title="@string/title_sort_by_name"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menuActionSortByArea"
         android:gravity="left"
         android:orderInCategory="75"
-        android:title="@string/title_area"
+        android:title="@string/title_sort_by_area"
         app:showAsAction="never" />
 
 </menu>

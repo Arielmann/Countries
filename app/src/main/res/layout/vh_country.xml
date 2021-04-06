@@ -55,19 +55,6 @@
             card:layout_constraintTop_toBottomOf="@+id/countryViewHolderNameTV"
             tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/countryViewHolderAreaTV"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:maxHeight="150dp"
-            android:text="500"
-            android:textSize="13sp"
-            card:layout_constraintBottom_toBottomOf="parent"
-            card:layout_constraintEnd_toEndOf="parent"
-            card:layout_constraintTop_toBottomOf="@+id/countryViewHolderNameTV"
-            tools:ignore="HardcodedText" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

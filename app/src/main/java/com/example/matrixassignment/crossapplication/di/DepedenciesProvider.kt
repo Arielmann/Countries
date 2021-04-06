@@ -21,12 +21,12 @@ object RetrofitModule {
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl("https://restcountries.eu/") //Since we only fetch a full url address at runtime, we can workaround retrofit's request for a base url
+        .baseUrl("https://restcountries.eu/")
         .build()
 
     @Singleton
     @Provides
-    fun provideAudioFilesNetworkService(): CountriesDataNetworkService {
+    fun provideCountriesNetworkService(): CountriesDataNetworkService {
         return retrofit.create(CountriesDataNetworkService::class.java)
     }
 }
@@ -37,7 +37,7 @@ object RepositoriesModule {
 
     @ViewModelScoped
     @Provides
-    fun provideAudioFilesRepository(countriesDataNetworkService: CountriesDataNetworkService): CountriesRepository {
+    fun provideCountriesRepository(countriesDataNetworkService: CountriesDataNetworkService): CountriesRepository {
         return CountriesRepository(countriesDataNetworkService)
     }
 }

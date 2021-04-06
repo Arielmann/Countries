@@ -4,11 +4,11 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.matrixassignment.countriesdatascreen.model.CountriesSorter
+import com.example.matrixassignment.countriesdatascreen.model.CountryListDisplayStrategiesManager
 import com.example.matrixassignment.crossapplication.events.MatrixAssignmentEvent
 import com.example.matrixassignment.countriesdatascreen.model.Country
 import com.example.matrixassignment.countriesdatascreen.model.CountrySortStrategy
-import com.example.matrixassignment.countriesdatascreen.model.OrderStrategy
+import com.example.matrixassignment.countriesdatascreen.model.CountryOrderStrategy
 import com.example.matrixassignment.countriesdatascreen.network.NetworkCallback
 import com.example.matrixassignment.countriesdatascreen.repository.CountriesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,14 +27,13 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
         private val TAG: String? = CountriesDataViewModel::class.java.simpleName
     }
 
-    val countriesBordersMap: MutableLiveData<Map<String, List<Country?>>> =
-        MutableLiveData(hashMapOf())
+    private val displayStrategiesManager = CountryListDisplayStrategiesManager()
+    val countriesBordersMap: MutableLiveData<Map<String, List<Country?>>> = MutableLiveData(hashMapOf())
     val countriesMap: MutableLiveData<Map<String, Country>> = MutableLiveData(hashMapOf())
-    val onCountryDownloadErrorEvent = MutableLiveData<MatrixAssignmentEvent>()
+    val onCountryDownloadErrorEvent = MutableLiveData(MatrixAssignmentEvent())
     val onAscendingDisplayRequired = MutableLiveData(MatrixAssignmentEvent())
     val onDescendingDisplayRequired = MutableLiveData(MatrixAssignmentEvent())
     val onDownloadProcessStarted = MutableLiveData(MatrixAssignmentEvent())
-    private val countriesSorter = CountriesSorter()
 
     /**
      * Starting a downloading the countries data
@@ -43,7 +42,7 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
         Log.d(TAG, "Starting countries data download")
 
         if (countriesMap.value!!.values.isNotEmpty()) {
-            //Prevents re-downloading. This choice can be changed as soon as a feature allowing the user to refresh the data will be added
+            //Prevents re-downloading. This behaviour can be changed as soon as a feature allowing the user to refresh the data will be added
             Log.d(TAG, "Data already downloaded, no need to download twice")
             return
         }
@@ -67,11 +66,11 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
     }
 
     /**
-     * Sorting the countries array by the predefined [CountriesSorter]
+     * Sorting the countries array by the predefined [CountryListDisplayStrategiesManager]
      */
     fun requestDisplayOrder(): List<Country> {
         postOrderingRequestEvents()
-        return countriesMap.value?.values!!.sortedWith(countriesSorter.getComparator())
+        return displayStrategiesManager.generateListForDisplay(countriesMap.value?.values!!)
     }
 
     /**
@@ -79,25 +78,25 @@ class CountriesDataViewModel @Inject constructor(private val countriesRepository
      * @param sortStrategy The strategy used for sorting
      */
     fun requestDisplayOrder(sortStrategy: CountrySortStrategy): List<Country> {
-        countriesSorter.sortStrategy = sortStrategy
-        return countriesMap.value?.values!!.sortedWith(countriesSorter.getComparator())
+        displayStrategiesManager.sortStrategy = sortStrategy
+        return displayStrategiesManager.generateListForDisplay(countriesMap.value?.values!!)
     }
 
     /**
-     * Sorting the countries array by a given [OrderStrategy]
-     * @param orderStrategy The strategy used for sorting
+     * Sorting the countries array by a given [CountryOrderStrategy]
+     * @param countryOrderStrategy The strategy used for sorting
      */
-    fun requestDisplayOrder(orderStrategy: OrderStrategy): List<Country> {
-        countriesSorter.orderStrategy = orderStrategy
+    fun requestDisplayOrder(countryOrderStrategy: CountryOrderStrategy): List<Country> {
+        displayStrategiesManager.orderStrategy = countryOrderStrategy
         postOrderingRequestEvents()
-        return countriesMap.value?.values!!.sortedWith(countriesSorter.getComparator())
+        return displayStrategiesManager.generateListForDisplay(countriesMap.value?.values!!)
     }
 
     /**
      * Notifying observers that a data ordering request was made
      */
     private fun postOrderingRequestEvents() {
-        if (countriesSorter.orderStrategy == OrderStrategy.ASCENDING) {
+        if (displayStrategiesManager.orderStrategy == CountryOrderStrategy.ASCENDING) {
             onAscendingDisplayRequired.postValue(MatrixAssignmentEvent())
             return
         }
