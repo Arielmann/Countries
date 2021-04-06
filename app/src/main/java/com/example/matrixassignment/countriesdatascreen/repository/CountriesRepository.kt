@@ -46,33 +46,33 @@ class CountriesRepository @Inject constructor(private val countriesDataNetworkSe
 
         try {
             startOperationIfNetworkAvailable {
-                Log.d(TAG, "Executing audio data fetch request")
+                Log.d(TAG, "Executing countries data fetch request")
                 val call = countriesDataNetworkService.fetchCountriesRawData()
 
                 call.enqueue(object : Callback<List<Country>> {
                     override fun onResponse(call: Call<List<Country>>, response: Response<List<Country>>) {
-                        Log.d(TAG, "Audio data fetch response: $response")
+                        Log.d(TAG, "Countries data fetch response: $response")
                         if (response.body() != null && response.isSuccessful) {
                             if (response.body() != null) {
-                                Log.d(TAG, "Audio data download successful")
+                                Log.d(TAG, "Countries data download successful")
                                 networkCallback.onSuccess(response.body()!!)
                                 return
                             }
                         }
-                        Log.d(TAG, "Audio data download fetched a bad response ")
-                        networkCallback.onFailure("Audio fetch request failed")
+                        Log.d(TAG, "Countries data download fetched a bad response ")
+                        networkCallback.onFailure("Countries fetch request failed")
                     }
 
                     override fun onFailure(call: Call<List<Country>>, t: Throwable) {
-                        Log.e(TAG, "Audio data fetch error: " + t.message)
+                        Log.e(TAG, "Countries data fetch error: " + t.message)
                         t.printStackTrace()
-                        networkCallback.onFailure("Audio fetch request failed")
+                        networkCallback.onFailure("Countries fetch request failed")
                     }
                 })
 
             }
         } catch (e: Exception) {
-            val errorMsg = "fetchAudioDataListL: An error has occurred but was caught not caught within the retrofit designated failure mechanism"
+            val errorMsg = "fetchCountries: An error has occurred but was caught not caught within the retrofit designated failure mechanism"
             Log.e(TAG, errorMsg)
             e.printStackTrace()
             networkCallback.onFailure(errorMsg)

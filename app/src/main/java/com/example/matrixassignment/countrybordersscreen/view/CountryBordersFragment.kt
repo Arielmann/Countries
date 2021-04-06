@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.matrixassignment.countriesdatascreen.model.Country
 import com.example.matrixassignment.countriesdatascreen.view.CountriesAdapter
@@ -14,7 +12,9 @@ import com.example.matrixassignment.countrybordersscreen.view.CountryBordersFrag
 import com.example.maytronicstestapp.databinding.FragmentCountryBordersBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-
+/**
+ * A fragment responsible to display data regarding the bordering countries of a given country
+ */
 @AndroidEntryPoint
 class CountryBordersFragment : Fragment() {
 
@@ -39,7 +39,7 @@ class CountryBordersFragment : Fragment() {
     }
 
     /**
-     * Sets the bordering countries list
+     * Sets and displays the bordering countries list
      */
     private fun setupBorderingCountriesList() {
         countriesAdapter = CountriesAdapter()

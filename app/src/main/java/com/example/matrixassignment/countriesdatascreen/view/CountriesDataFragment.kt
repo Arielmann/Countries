@@ -19,10 +19,14 @@ import com.example.matrixassignment.countriesdatascreen.model.CountrySortStrateg
 import com.example.matrixassignment.countriesdatascreen.model.OrderStrategy
 import com.example.matrixassignment.crossapplication.events.MatrixAssignmentEvent
 import com.example.matrixassignment.countriesdatascreen.viewmodel.CountriesDataViewModel
+import com.example.matrixassignment.crossapplication.utils.observeAndIgnoreInitialNotification
 import com.example.maytronicstestapp.R
 import com.example.maytronicstestapp.databinding.FragmentCountriesDataBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * A fragment responsible to display data regarding the countries within the app
+ */
 @AndroidEntryPoint
 class CountriesDataFragment : Fragment() {
 
@@ -45,16 +49,14 @@ class CountriesDataFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupDataObservation()
         setupCountriesList()
-        requestCountries()
         setupToolbar()
-        binding.countriesListRestartProcessIV.setOnClickListener { requestCountries() }
-    }
-
-    private fun requestCountries() {
-        showDownloadInProgressUI()
         viewModel.requestCountries()
+        binding.countriesListRestartProcessIV.setOnClickListener { viewModel.requestCountries() }
     }
 
+    /**
+     * Setting up the toolbar for user communication
+     */
     private fun setupToolbar() {
         binding.letterGeneratorToolBar.inflateMenu(R.menu.countries_menu)
 
@@ -62,32 +64,28 @@ class CountriesDataFragment : Fragment() {
             when (item?.itemId) {
 
                 R.id.menuActionAscendingOrder -> {
-                    countriesAdapter.submitList(viewModel.requestSorting(OrderStrategy.ASCENDING)) {
+                    countriesAdapter.submitList(viewModel.requestDisplayOrder(OrderStrategy.ASCENDING)) {
                         binding.countriesListRV.layoutManager?.scrollToPosition(0)
-                        setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_selected_24)
-                        setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_24)
                     }
                     true
                 }
 
                 R.id.menuActionDescendingOrder -> {
-                    countriesAdapter.submitList(viewModel.requestSorting(OrderStrategy.DESCENDING)) {
+                    countriesAdapter.submitList(viewModel.requestDisplayOrder(OrderStrategy.DESCENDING)) {
                         binding.countriesListRV.layoutManager?.scrollToPosition(0)
-                        setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_24)
-                        setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_selected_24)
                     }
                     true
                 }
 
                 R.id.menuActionSortByNativeName -> {
-                    countriesAdapter.submitList(viewModel.requestSorting(CountrySortStrategy.NATIVE_NAME)) {
+                    countriesAdapter.submitList(viewModel.requestDisplayOrder(CountrySortStrategy.NATIVE_NAME)) {
                         binding.countriesListRV.layoutManager?.scrollToPosition(0)
                     }
                     true
                 }
 
                 R.id.menuActionSortByArea -> {
-                    countriesAdapter.submitList(viewModel.requestSorting(CountrySortStrategy.AREA)) {
+                    countriesAdapter.submitList(viewModel.requestDisplayOrder(CountrySortStrategy.AREA)) {
                         binding.countriesListRV.layoutManager?.scrollToPosition(0)
                     }
                     true
@@ -98,15 +96,23 @@ class CountriesDataFragment : Fragment() {
         }
     }
 
+    /**
+     * Setting menu images when user wants to display data in ascending order
+     */
     private fun setUpwardArrowImage(@DrawableRes icon: Int) {
         if (binding.letterGeneratorToolBar.menu.getItem(UPWARD_ARROW_MENU_ITEM_POSITION) != null) { //If menu is inflated
-            binding.letterGeneratorToolBar.menu.getItem(UPWARD_ARROW_MENU_ITEM_POSITION).setIcon(icon)
+            binding.letterGeneratorToolBar.menu.getItem(UPWARD_ARROW_MENU_ITEM_POSITION)
+                .setIcon(icon)
         }
     }
 
+    /**
+     * Setting menu images when user wants to display data in descending order
+     */
     private fun setDownwardArrowImage(@DrawableRes icon: Int) {
         if (binding.letterGeneratorToolBar.menu.getItem(DOWNWARD_ARROW_MENU_ITEM_POSITION) != null) { //If menu is inflated
-            binding.letterGeneratorToolBar.menu.getItem(DOWNWARD_ARROW_MENU_ITEM_POSITION).setIcon(icon)
+            binding.letterGeneratorToolBar.menu.getItem(DOWNWARD_ARROW_MENU_ITEM_POSITION)
+                .setIcon(icon)
         }
     }
 
@@ -118,15 +124,32 @@ class CountriesDataFragment : Fragment() {
         viewModel.countriesMap.observe(viewLifecycleOwner, { countries ->
             countries?.let {
                 Log.d(TAG, "New countries received from viewModel")
-                countriesAdapter.submitList(viewModel.requestSorting())
+                countriesAdapter.submitList(viewModel.requestDisplayOrder())
                 hideProgressionUI()
             } ?: Log.w(TAG, "No countries data received")
         })
 
         observeFailureScenario(
-            viewModel.countryDownloadErrorEvent,
+            viewModel.onCountryDownloadErrorEvent,
             getString(R.string.error_audio_data_fetch_failed)
         )
+
+        viewModel.onDescendingDisplayRequired.observeAndIgnoreInitialNotification(viewLifecycleOwner, {
+            Log.d(TAG, "onDescendingDisplayRequired")
+            setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_24)
+            setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_selected_24)
+        })
+
+        viewModel.onAscendingDisplayRequired.observeAndIgnoreInitialNotification(viewLifecycleOwner, {
+            Log.d(TAG, "onAscendingDisplayRequired")
+            setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_selected_24)
+            setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_24)
+        })
+
+        viewModel.onDownloadProcessStarted.observeAndIgnoreInitialNotification(viewLifecycleOwner, {
+            Log.d(TAG, "onDownloadProcessStarted")
+            showDownloadInProgressUI()
+        })
 
     }
 
@@ -178,7 +201,11 @@ class CountriesDataFragment : Fragment() {
             viewModel.countriesBordersMap.value!![country.alpha3Code]?.let {
                 val action = CountriesDataFragmentDirections.navigateToCountryBorders(it.toTypedArray())
                 findNavController().navigate(action)
-            } ?: Toast.makeText(requireContext(), getString(R.string.error_cannot_access_borders), LENGTH_LONG).show()
+            } ?: Toast.makeText(
+                requireContext(),
+                getString(R.string.error_cannot_access_borders),
+                LENGTH_LONG
+            ).show()
         }
 
         binding.countriesListRV.apply {
