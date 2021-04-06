@@ -130,17 +130,17 @@ class CountriesDataFragment : Fragment() {
             getString(R.string.error_countries_data_fetch_failed)
         )
 
-        viewModel.onDescendingDisplayRequired.observeAndIgnoreInitialNotification(viewLifecycleOwner, {
-                Log.d(TAG, "onDescendingDisplayRequired")
-                setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_24)
-                setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_selected_24)
-            })
-
         viewModel.onAscendingDisplayRequired.observeAndIgnoreInitialNotification(viewLifecycleOwner, {
                 Log.d(TAG, "onAscendingDisplayRequired")
                 setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_selected_24)
                 setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_24)
             })
+
+        viewModel.onDescendingDisplayRequired.observeAndIgnoreInitialNotification(viewLifecycleOwner, {
+            Log.d(TAG, "onDescendingDisplayRequired")
+            setUpwardArrowImage(R.drawable.ic_baseline_arrow_upward_24)
+            setDownwardArrowImage(R.drawable.ic_baseline_arrow_downward_selected_24)
+        })
 
         viewModel.onDownloadProcessStarted.observeAndIgnoreInitialNotification(viewLifecycleOwner, {
             Log.d(TAG, "onDownloadProcessStarted")
